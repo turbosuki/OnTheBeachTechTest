@@ -27,6 +27,7 @@ public class Tests
         Assert.That(holidaySearch.Results[0].Hotel.Id, Is.EqualTo(9), "First hotel should have Id 9");
     }
     
+    [Test]
     public void CorrectHolidayReturnedForCustomer2()
     {
         var departingFrom = new List<string> { "LHR", "LGW", "STN", "LTN", "SEN", "LCY" };
@@ -43,6 +44,7 @@ public class Tests
         Assert.That(holidaySearch.Results[0].Hotel.Id, Is.EqualTo(5), "First hotel should have Id 5");
     }
     
+    [Test]
     public void CorrectHolidayReturnedForCustomer3()
     {
         var departingFrom = new List<string>();
