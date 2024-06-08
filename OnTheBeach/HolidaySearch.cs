@@ -4,13 +4,13 @@ namespace onthebeach;
 
 public class HolidaySearch
 {
-    public string DepartingFrom;
+    public List<string> DepartingFrom;
     public string TravellingTo;
     public DateTime DepartureDate;
     public int Duration;
     public List<HolidayModel> Results;
 
-    public HolidaySearch WhereDepartingFrom(string departingFrom)
+    public HolidaySearch WhereDepartingFrom(List<string> departingFrom)
     {
         DepartingFrom = departingFrom;
         return this;

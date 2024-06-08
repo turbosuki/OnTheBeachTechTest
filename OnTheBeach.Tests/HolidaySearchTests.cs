@@ -13,8 +13,9 @@ public class Tests
     [Test]
     public void CorrectHolidayReturnedForCustomer1()
     {
+        var departingFrom = new List<string> { "MAN" };
         var holidaySearch = new HolidaySearch()
-            .WhereDepartingFrom("MAN") //TODO represent airport names better, hardcoding icky
+            .WhereDepartingFrom(departingFrom)
             .WhereTravellingTo("AGP")
             .WithDuration(7)
             .WithDepartureDate(new DateTime(2023, 7, 1));
@@ -28,8 +29,9 @@ public class Tests
     
     public void CorrectHolidayReturnedForCustomer2()
     {
+        var departingFrom = new List<string> { "LHR", "LGW", "STN", "LTN", "SEN", "LCY" };
         var holidaySearch = new HolidaySearch()
-            .WhereDepartingFrom("") //TODO change model, it can be more than one airport. Sneaky. 
+            .WhereDepartingFrom(departingFrom)
             .WhereTravellingTo("PMI")
             .WithDuration(10)
             .WithDepartureDate(new DateTime(2023, 6, 15));
@@ -43,8 +45,9 @@ public class Tests
     
     public void CorrectHolidayReturnedForCustomer3()
     {
+        var departingFrom = new List<string>();
         var holidaySearch = new HolidaySearch()
-            .WhereDepartingFrom("") //TODO account for ANY 
+            .WhereDepartingFrom(departingFrom)
             .WhereTravellingTo("LPA")
             .WithDuration(14)
             .WithDepartureDate(new DateTime(2022, 11, 10));
