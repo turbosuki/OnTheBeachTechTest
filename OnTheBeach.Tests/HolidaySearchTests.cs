@@ -20,6 +20,7 @@ public class Tests
             .WithDuration(7)
             .WithDepartureDate(new DateTime(2023, 7, 1));
         
+        holidaySearch.Initialise();
         holidaySearch.Search();
 
         Assert.That(holidaySearch.Results, Is.Not.Empty, "Holidays list should not be empty");
@@ -37,6 +38,7 @@ public class Tests
             .WithDuration(10)
             .WithDepartureDate(new DateTime(2023, 6, 15));
         
+        holidaySearch.Initialise();
         holidaySearch.Search();
 
         Assert.That(holidaySearch.Results, Is.Not.Empty, "Holidays list should not be empty");
@@ -54,6 +56,7 @@ public class Tests
             .WithDuration(14)
             .WithDepartureDate(new DateTime(2022, 11, 10));
         
+        holidaySearch.Initialise();
         holidaySearch.Search();
 
         Assert.That(holidaySearch.Results, Is.Not.Empty, "Holidays list should not be empty");
