@@ -64,28 +64,36 @@ public class HolidaySearch
     public void Search()
     {
         var selectedFlights = AvailableFlights
-            .Where(x => (!DepartingFrom.Any() || DepartingFrom.Contains(x.From))
-                        && x.To.Equals(TravellingTo)
-                        && x.DepartureDate.Equals(DepartureDate)
+            .Where(flight => (!DepartingFrom.Any() || DepartingFrom.Contains(flight.From))
+                             && flight.To.Equals(TravellingTo)
+                             && flight.DepartureDate.Equals(DepartureDate)
             )
-            .OrderBy(x => x.Price)
             .ToList();
         
         var selectedHotels = AvailableHotels
-            .Where(x => x.Nights == Duration && x.LocalAirports.Any(airport => TravellingTo.Contains(airport)) &&
-                        x.ArrivalDate.Equals(DepartureDate)).OrderBy(x => x.PricePerNight).ToList();
+            .Where(hotel => hotel.Nights == Duration && hotel.LocalAirports.Any(airport => TravellingTo.Contains(airport)) &&
+                            hotel.ArrivalDate.Equals(DepartureDate))
+            .ToList();
 
-        foreach (FlightModel flight in selectedFlights)
+        foreach (var flight in selectedFlights)
         {
-            foreach (HotelModel hotel in selectedHotels)
+            foreach (var hotel in selectedHotels)
             {
-                Results.Add(new HolidayModel
-                {
-                    Flight = flight,
-                    Hotel = hotel,
-                    TotalPrice = hotel.PricePerNight * hotel.Nights + flight.Price
-                });
+                Results.Add(CreateHolidayModel(flight, hotel));
             }
         }
+
+        Results = Results.OrderBy(r => r.TotalPrice).ToList();
+        
+    }
+
+    private HolidayModel CreateHolidayModel(FlightModel flight, HotelModel hotel)
+    {
+        return new HolidayModel
+        {
+            Flight = flight,
+            Hotel = hotel,
+            TotalPrice = hotel.PricePerNight * hotel.Nights + flight.Price
+        };
     }
 }
