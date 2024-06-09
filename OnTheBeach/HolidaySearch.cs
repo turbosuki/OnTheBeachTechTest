@@ -13,6 +13,11 @@ public class HolidaySearch
     private List<FlightModel> AvailableFlights { get; set; }
     private List<HotelModel> AvailableHotels { get; set; }
 
+    public HolidaySearch()
+    {
+        UpdateFlightAndHotelDataFromFiles();
+    }
+    
     public HolidaySearch WhereDepartingFrom(List<string> departingFrom)
     {
         DepartingFrom = departingFrom;
@@ -35,30 +40,6 @@ public class HolidaySearch
     {
         Duration = duration;
         return this;
-    }
-
-    public void Initialise()
-    {
-        try
-        {
-            var basePath = AppDomain.CurrentDomain.BaseDirectory;
-
-            var flightsFilePath = Path.Combine(basePath, "Data/flights.json");
-            var jsonFlightData = File.ReadAllText(flightsFilePath);
-            AvailableFlights = JsonConvert.DeserializeObject<List<FlightModel>>(jsonFlightData) ?? [];
-
-            var hotelsFilePath = Path.Combine(basePath, "Data/hotels.json");
-            var jsonHotelData = File.ReadAllText(hotelsFilePath);
-            AvailableHotels = JsonConvert.DeserializeObject<List<HotelModel>>(jsonHotelData) ?? [];
-        }
-        catch (FileNotFoundException ex)
-        {
-            Console.WriteLine($"A required file was not found. Check your directory structure. Details: {ex.Message}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"An error occurred during the search: {ex.Message}");
-        }
     }
 
     public void Search()
@@ -85,6 +66,30 @@ public class HolidaySearch
 
         Results = Results.OrderBy(r => r.TotalPrice).ToList();
         
+    }
+
+    public void UpdateFlightAndHotelDataFromFiles()
+    {
+        try
+        {
+            var basePath = AppDomain.CurrentDomain.BaseDirectory;
+
+            var flightsFilePath = Path.Combine(basePath, "Data/flights.json");
+            var jsonFlightData = File.ReadAllText(flightsFilePath);
+            AvailableFlights = JsonConvert.DeserializeObject<List<FlightModel>>(jsonFlightData) ?? [];
+
+            var hotelsFilePath = Path.Combine(basePath, "Data/hotels.json");
+            var jsonHotelData = File.ReadAllText(hotelsFilePath);
+            AvailableHotels = JsonConvert.DeserializeObject<List<HotelModel>>(jsonHotelData) ?? [];
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine($"A required file was not found. Check your directory structure. Details: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred during the search: {ex.Message}");
+        }
     }
 
     private HolidayModel CreateHolidayModel(FlightModel flight, HotelModel hotel)

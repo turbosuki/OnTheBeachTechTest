@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace onthebeach.Models;
 
 using Newtonsoft.Json;

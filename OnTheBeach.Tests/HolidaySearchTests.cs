@@ -4,14 +4,8 @@ namespace OnTheBeach.Tests;
 
 public class Tests
 {
-    [SetUp]
-    public void Setup()
-    {
-        //See if test setup needed
-    }
-
     [Test]
-    public void CorrectHolidayReturnedForCustomer1()
+    public void CustomerSearchingForSingleDepartingFromGetsCorrectResult()
     {
         var departingFrom = new List<string> { "MAN" };
         var holidaySearch = new HolidaySearch()
@@ -20,7 +14,6 @@ public class Tests
             .WithDuration(7)
             .WithDepartureDate(new DateTime(2023, 7, 1));
         
-        holidaySearch.Initialise();
         holidaySearch.Search();
 
         Assert.That(holidaySearch.Results, Is.Not.Empty, "Holidays list should not be empty");
@@ -29,7 +22,7 @@ public class Tests
     }
     
     [Test]
-    public void CorrectHolidayReturnedForCustomer2()
+    public void CustomerDepartingFromAnyLondonAirportGetsCorrectResult()
     {
         var departingFrom = new List<string> { "LHR", "LGW", "STN", "LTN", "SEN", "LCY" };
         var holidaySearch = new HolidaySearch()
@@ -38,7 +31,6 @@ public class Tests
             .WithDuration(10)
             .WithDepartureDate(new DateTime(2023, 6, 15));
         
-        holidaySearch.Initialise();
         holidaySearch.Search();
 
         Assert.That(holidaySearch.Results, Is.Not.Empty, "Holidays list should not be empty");
@@ -47,7 +39,7 @@ public class Tests
     }
     
     [Test]
-    public void CorrectHolidayReturnedForCustomer3()
+    public void CustomerDepartingFromAnyAirportGetsCorrectResult()
     {
         var departingFrom = new List<string>();
         var holidaySearch = new HolidaySearch()
@@ -56,7 +48,6 @@ public class Tests
             .WithDuration(14)
             .WithDepartureDate(new DateTime(2022, 11, 10));
         
-        holidaySearch.Initialise();
         holidaySearch.Search();
 
         Assert.That(holidaySearch.Results, Is.Not.Empty, "Holidays list should not be empty");
