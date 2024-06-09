@@ -89,11 +89,6 @@ public class HolidaySearch
 
     private HolidayModel CreateHolidayModel(FlightModel flight, HotelModel hotel)
     {
-        return new HolidayModel
-        {
-            Flight = flight,
-            Hotel = hotel,
-            TotalPrice = hotel.PricePerNight * hotel.Nights + flight.Price
-        };
+        return new HolidayModel(flight, hotel);
     }
 }
