@@ -5,13 +5,13 @@ namespace onthebeach;
 
 public class HolidaySearch
 {
-    public List<string> DepartingFrom;
-    public string TravellingTo;
-    public DateTime DepartureDate;
-    public int Duration;
-    public List<HolidayModel> Results = new();
-    public List<FlightModel> AvailableFlights;
-    public List<HotelModel> AvailableHotels;
+    private List<string> DepartingFrom { get; set; }
+    private string TravellingTo { get; set; }
+    private DateTime DepartureDate { get; set; }
+    private int Duration { get; set; }
+    public List<HolidayModel> Results { get; set; } = [];
+    private List<FlightModel> AvailableFlights { get; set; }
+    private List<HotelModel> AvailableHotels { get; set; }
 
     public HolidaySearch WhereDepartingFrom(List<string> departingFrom)
     {
@@ -41,15 +41,15 @@ public class HolidaySearch
     {
         try
         {
-            string basePath = AppDomain.CurrentDomain.BaseDirectory;
+            var basePath = AppDomain.CurrentDomain.BaseDirectory;
 
-            string flightsFilePath = Path.Combine(basePath, "Data", "flights.json");
-            string jsonFlightData = File.ReadAllText(flightsFilePath);
-            AvailableFlights = JsonConvert.DeserializeObject<List<FlightModel>>(jsonFlightData);
+            var flightsFilePath = Path.Combine(basePath, "Data/flights.json");
+            var jsonFlightData = File.ReadAllText(flightsFilePath);
+            AvailableFlights = JsonConvert.DeserializeObject<List<FlightModel>>(jsonFlightData) ?? [];
 
-            string hotelsFilePath = Path.Combine(basePath, "Data", "hotels.json");
-            string jsonHotelData = File.ReadAllText(hotelsFilePath);
-            AvailableHotels = JsonConvert.DeserializeObject<List<HotelModel>>(jsonHotelData);
+            var hotelsFilePath = Path.Combine(basePath, "Data/hotels.json");
+            var jsonHotelData = File.ReadAllText(hotelsFilePath);
+            AvailableHotels = JsonConvert.DeserializeObject<List<HotelModel>>(jsonHotelData) ?? [];
         }
         catch (FileNotFoundException ex)
         {
@@ -71,7 +71,7 @@ public class HolidaySearch
             .ToList();
         
         var selectedHotels = AvailableHotels
-            .Where(hotel => hotel.Nights == Duration && hotel.LocalAirports.Any(airport => TravellingTo.Contains(airport)) &&
+            .Where(hotel => hotel.Nights.Equals(Duration) && hotel.LocalAirports.Any(airport => TravellingTo.Contains(airport)) &&
                             hotel.ArrivalDate.Equals(DepartureDate))
             .ToList();
 
