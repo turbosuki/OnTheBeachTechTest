@@ -13,9 +13,10 @@ public class HolidaySearch
     private List<HotelModel> _availableHotels;
     public List<HolidayModel> Results { get; private set; } = [];
 
-    public HolidaySearch()
+    public HolidaySearch(string flightFilePath, string hotelFilePath)
     {
-        UpdateFlightAndHotelDataFromFiles();
+        _availableFlights = GetDataFromFile<FlightModel>(flightFilePath);
+        _availableHotels = GetDataFromFile<HotelModel>(hotelFilePath);
     }
     
     public HolidaySearch WhereDepartingFrom(List<string> departingFrom)
@@ -67,28 +68,49 @@ public class HolidaySearch
 
         Results = Results.OrderBy(r => r.TotalPrice).ToList();
     }
+    
+    private List<T> GetDataFromFile<T>(string fileName)
+    {
+        var filePath = BuildFilePath(fileName);
+        var fileText = ReadFileContent(filePath);
 
-    public void UpdateFlightAndHotelDataFromFiles()
+        return ConvertFileContent<T>(fileText);
+    }
+
+    private string BuildFilePath(string fileName)
+    {
+        var basePath = $"{AppDomain.CurrentDomain.BaseDirectory}/Data/";
+        return Path.Combine(basePath, fileName);
+    }
+
+    private string ReadFileContent(string filePath)
     {
         try
         {
-            var basePath = AppDomain.CurrentDomain.BaseDirectory;
-
-            var flightsFilePath = Path.Combine(basePath, "Data/flights.json");
-            var jsonFlightData = File.ReadAllText(flightsFilePath);
-            _availableFlights = JsonConvert.DeserializeObject<List<FlightModel>>(jsonFlightData) ?? [];
-
-            var hotelsFilePath = Path.Combine(basePath, "Data/hotels.json");
-            var jsonHotelData = File.ReadAllText(hotelsFilePath);
-            _availableHotels = JsonConvert.DeserializeObject<List<HotelModel>>(jsonHotelData) ?? [];
+            return File.ReadAllText(filePath);
         }
         catch (FileNotFoundException ex)
         {
             Console.WriteLine($"A required file was not found. Check your directory structure. Details: {ex.Message}");
+            throw;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"An error occurred during the search: {ex.Message}");
+            Console.WriteLine($"An error occurred during data retrieval: {ex.Message}");
+            throw;
+        }
+    }
+
+    private List<T> ConvertFileContent<T>(string fileContent)
+    {
+        try 
+        {
+            return JsonConvert.DeserializeObject<List<T>>(fileContent) ?? [];
+        }
+        catch (JsonReaderException ex)
+        {
+            Console.WriteLine($"An error occurred during data conversion: {ex.Message}");
+            throw;
         }
     }
 }
