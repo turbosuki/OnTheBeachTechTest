@@ -52,8 +52,9 @@ public class HolidaySearch
             .ToList();
         
         var selectedHotels = AvailableHotels
-            .Where(hotel => hotel.Nights.Equals(Duration) && hotel.LocalAirports.Any(airport => TravellingTo.Contains(airport)) &&
-                            hotel.ArrivalDate.Equals(DepartureDate))
+            .Where(hotel => hotel.Nights.Equals(Duration) 
+                            && hotel.LocalAirports.Any(airport => TravellingTo.Contains(airport)) 
+                            && hotel.ArrivalDate.Equals(DepartureDate))
             .ToList();
 
         foreach (var flight in selectedFlights)
@@ -65,7 +66,6 @@ public class HolidaySearch
         }
 
         Results = Results.OrderBy(r => r.TotalPrice).ToList();
-        
     }
 
     public void UpdateFlightAndHotelDataFromFiles()
