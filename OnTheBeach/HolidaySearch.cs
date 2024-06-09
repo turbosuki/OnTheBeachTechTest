@@ -5,13 +5,13 @@ namespace onthebeach;
 
 public class HolidaySearch
 {
-    private List<string> DepartingFrom { get; set; }
-    private string TravellingTo { get; set; }
-    private DateTime DepartureDate { get; set; }
-    private int Duration { get; set; }
-    public List<HolidayModel> Results { get; set; } = [];
-    private List<FlightModel> AvailableFlights { get; set; }
-    private List<HotelModel> AvailableHotels { get; set; }
+    private List<string> _departingFrom;
+    private string _travellingTo;
+    private DateTime _departureDate;
+    private int _duration;
+    private List<FlightModel> _availableFlights;
+    private List<HotelModel> _availableHotels;
+    public List<HolidayModel> Results { get; private set; } = [];
 
     public HolidaySearch()
     {
@@ -20,48 +20,48 @@ public class HolidaySearch
     
     public HolidaySearch WhereDepartingFrom(List<string> departingFrom)
     {
-        DepartingFrom = departingFrom;
+        _departingFrom = departingFrom;
         return this;
     }
 
     public HolidaySearch WhereTravellingTo(string travellingTo)
     {
-        TravellingTo = travellingTo;
+        _travellingTo = travellingTo;
         return this;
     }
 
     public HolidaySearch WithDepartureDate(DateTime departureDate)
     {
-        DepartureDate = departureDate;
+        _departureDate = departureDate;
         return this;
     }
 
     public HolidaySearch WithDuration(int duration)
     {
-        Duration = duration;
+        _duration = duration;
         return this;
     }
 
     public void Search()
     {
-        var selectedFlights = AvailableFlights
-            .Where(flight => (!DepartingFrom.Any() || DepartingFrom.Contains(flight.From))
-                             && flight.To.Equals(TravellingTo)
-                             && flight.DepartureDate.Equals(DepartureDate)
+        var selectedFlights = _availableFlights
+            .Where(flight => (!_departingFrom.Any() || _departingFrom.Contains(flight.From))
+                             && flight.To.Equals(_travellingTo)
+                             && flight.DepartureDate.Equals(_departureDate)
             )
             .ToList();
         
-        var selectedHotels = AvailableHotels
-            .Where(hotel => hotel.Nights.Equals(Duration) 
-                            && hotel.LocalAirports.Any(airport => TravellingTo.Contains(airport)) 
-                            && hotel.ArrivalDate.Equals(DepartureDate))
+        var selectedHotels = _availableHotels
+            .Where(hotel => hotel.Nights.Equals(_duration) 
+                            && hotel.LocalAirports.Any(airport => _travellingTo.Contains(airport)) 
+                            && hotel.ArrivalDate.Equals(_departureDate))
             .ToList();
 
         foreach (var flight in selectedFlights)
         {
             foreach (var hotel in selectedHotels)
             {
-                Results.Add(CreateHolidayModel(flight, hotel));
+                Results.Add(new HolidayModel(flight, hotel));
             }
         }
 
@@ -76,11 +76,11 @@ public class HolidaySearch
 
             var flightsFilePath = Path.Combine(basePath, "Data/flights.json");
             var jsonFlightData = File.ReadAllText(flightsFilePath);
-            AvailableFlights = JsonConvert.DeserializeObject<List<FlightModel>>(jsonFlightData) ?? [];
+            _availableFlights = JsonConvert.DeserializeObject<List<FlightModel>>(jsonFlightData) ?? [];
 
             var hotelsFilePath = Path.Combine(basePath, "Data/hotels.json");
             var jsonHotelData = File.ReadAllText(hotelsFilePath);
-            AvailableHotels = JsonConvert.DeserializeObject<List<HotelModel>>(jsonHotelData) ?? [];
+            _availableHotels = JsonConvert.DeserializeObject<List<HotelModel>>(jsonHotelData) ?? [];
         }
         catch (FileNotFoundException ex)
         {
@@ -90,10 +90,5 @@ public class HolidaySearch
         {
             Console.WriteLine($"An error occurred during the search: {ex.Message}");
         }
-    }
-
-    private HolidayModel CreateHolidayModel(FlightModel flight, HotelModel hotel)
-    {
-        return new HolidayModel(flight, hotel);
     }
 }
