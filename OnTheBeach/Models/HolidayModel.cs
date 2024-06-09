@@ -21,7 +21,6 @@ public class HolidayModel
     }
 
     private HotelModel _hotel;
-
     public HotelModel Hotel
     {
         get => _hotel;
@@ -31,7 +30,6 @@ public class HolidayModel
             CalculateTotalPrice();
         }
     }
-    
     
     public int TotalPrice { get; private set; }
     
